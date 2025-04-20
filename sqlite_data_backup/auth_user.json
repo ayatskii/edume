@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "password": "pbkdf2_sha256$1000000$QukLiP7ug2bWylFJM0E10f$r0TlknhNRk92nHXxUD4McjPMrUuO5UY1JHtTHokWlZE=",
+    "last_login": "2025-04-20 11:52:46.740930",
+    "is_superuser": 1,
+    "username": "merge",
+    "last_name": "",
+    "email": "",
+    "is_staff": 1,
+    "is_active": 1,
+    "date_joined": "2025-04-20 11:50:27.468418",
+    "first_name": ""
+  }
+]

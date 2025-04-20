@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "app_label": "admin",
+    "model": "logentry"
+  },
+  {
+    "id": 2,
+    "app_label": "auth",
+    "model": "permission"
+  },
+  {
+    "id": 3,
+    "app_label": "auth",
+    "model": "group"
+  },
+  {
+    "id": 4,
+    "app_label": "auth",
+    "model": "user"
+  },
+  {
+    "id": 5,
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  },
+  {
+    "id": 6,
+    "app_label": "sessions",
+    "model": "session"
+  },
+  {
+    "id": 7,
+    "app_label": "education",
+    "model": "user"
+  },
+  {
+    "id": 8,
+    "app_label": "education",
+    "model": "choice"
+  },
+  {
+    "id": 9,
+    "app_label": "education",
+    "model": "course"
+  },
+  {
+    "id": 10,
+    "app_label": "education",
+    "model": "exam"
+  },
+  {
+    "id": 11,
+    "app_label": "education",
+    "model": "examsubmission"
+  },
+  {
+    "id": 12,
+    "app_label": "education",
+    "model": "module"
+  },
+  {
+    "id": 13,
+    "app_label": "education",
+    "model": "question"
+  },
+  {
+    "id": 14,
+    "app_label": "education",
+    "model": "lesson"
+  },
+  {
+    "id": 15,
+    "app_label": "education",
+    "model": "lessonprogress"
+  },
+  {
+    "id": 16,
+    "app_label": "education",
+    "model": "answer"
+  },
+  {
+    "id": 17,
+    "app_label": "assessment",
+    "model": "assessmentconfig"
+  },
+  {
+    "id": 18,
+    "app_label": "authentication",
+    "model": "authconfig"
+  }
+]

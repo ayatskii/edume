@@ -1,0 +1,434 @@
+[
+  {
+    "id": 1,
+    "content_type_id": 1,
+    "codename": "add_logentry",
+    "name": "Can add log entry"
+  },
+  {
+    "id": 2,
+    "content_type_id": 1,
+    "codename": "change_logentry",
+    "name": "Can change log entry"
+  },
+  {
+    "id": 3,
+    "content_type_id": 1,
+    "codename": "delete_logentry",
+    "name": "Can delete log entry"
+  },
+  {
+    "id": 4,
+    "content_type_id": 1,
+    "codename": "view_logentry",
+    "name": "Can view log entry"
+  },
+  {
+    "id": 5,
+    "content_type_id": 2,
+    "codename": "add_permission",
+    "name": "Can add permission"
+  },
+  {
+    "id": 6,
+    "content_type_id": 2,
+    "codename": "change_permission",
+    "name": "Can change permission"
+  },
+  {
+    "id": 7,
+    "content_type_id": 2,
+    "codename": "delete_permission",
+    "name": "Can delete permission"
+  },
+  {
+    "id": 8,
+    "content_type_id": 2,
+    "codename": "view_permission",
+    "name": "Can view permission"
+  },
+  {
+    "id": 9,
+    "content_type_id": 3,
+    "codename": "add_group",
+    "name": "Can add group"
+  },
+  {
+    "id": 10,
+    "content_type_id": 3,
+    "codename": "change_group",
+    "name": "Can change group"
+  },
+  {
+    "id": 11,
+    "content_type_id": 3,
+    "codename": "delete_group",
+    "name": "Can delete group"
+  },
+  {
+    "id": 12,
+    "content_type_id": 3,
+    "codename": "view_group",
+    "name": "Can view group"
+  },
+  {
+    "id": 13,
+    "content_type_id": 4,
+    "codename": "add_user",
+    "name": "Can add user"
+  },
+  {
+    "id": 14,
+    "content_type_id": 4,
+    "codename": "change_user",
+    "name": "Can change user"
+  },
+  {
+    "id": 15,
+    "content_type_id": 4,
+    "codename": "delete_user",
+    "name": "Can delete user"
+  },
+  {
+    "id": 16,
+    "content_type_id": 4,
+    "codename": "view_user",
+    "name": "Can view user"
+  },
+  {
+    "id": 17,
+    "content_type_id": 5,
+    "codename": "add_contenttype",
+    "name": "Can add content type"
+  },
+  {
+    "id": 18,
+    "content_type_id": 5,
+    "codename": "change_contenttype",
+    "name": "Can change content type"
+  },
+  {
+    "id": 19,
+    "content_type_id": 5,
+    "codename": "delete_contenttype",
+    "name": "Can delete content type"
+  },
+  {
+    "id": 20,
+    "content_type_id": 5,
+    "codename": "view_contenttype",
+    "name": "Can view content type"
+  },
+  {
+    "id": 21,
+    "content_type_id": 6,
+    "codename": "add_session",
+    "name": "Can add session"
+  },
+  {
+    "id": 22,
+    "content_type_id": 6,
+    "codename": "change_session",
+    "name": "Can change session"
+  },
+  {
+    "id": 23,
+    "content_type_id": 6,
+    "codename": "delete_session",
+    "name": "Can delete session"
+  },
+  {
+    "id": 24,
+    "content_type_id": 6,
+    "codename": "view_session",
+    "name": "Can view session"
+  },
+  {
+    "id": 25,
+    "content_type_id": 7,
+    "codename": "add_user",
+    "name": "Can add user"
+  },
+  {
+    "id": 26,
+    "content_type_id": 7,
+    "codename": "change_user",
+    "name": "Can change user"
+  },
+  {
+    "id": 27,
+    "content_type_id": 7,
+    "codename": "delete_user",
+    "name": "Can delete user"
+  },
+  {
+    "id": 28,
+    "content_type_id": 7,
+    "codename": "view_user",
+    "name": "Can view user"
+  },
+  {
+    "id": 29,
+    "content_type_id": 8,
+    "codename": "add_choice",
+    "name": "Can add choice"
+  },
+  {
+    "id": 30,
+    "content_type_id": 8,
+    "codename": "change_choice",
+    "name": "Can change choice"
+  },
+  {
+    "id": 31,
+    "content_type_id": 8,
+    "codename": "delete_choice",
+    "name": "Can delete choice"
+  },
+  {
+    "id": 32,
+    "content_type_id": 8,
+    "codename": "view_choice",
+    "name": "Can view choice"
+  },
+  {
+    "id": 33,
+    "content_type_id": 9,
+    "codename": "add_course",
+    "name": "Can add course"
+  },
+  {
+    "id": 34,
+    "content_type_id": 9,
+    "codename": "change_course",
+    "name": "Can change course"
+  },
+  {
+    "id": 35,
+    "content_type_id": 9,
+    "codename": "delete_course",
+    "name": "Can delete course"
+  },
+  {
+    "id": 36,
+    "content_type_id": 9,
+    "codename": "view_course",
+    "name": "Can view course"
+  },
+  {
+    "id": 37,
+    "content_type_id": 10,
+    "codename": "add_exam",
+    "name": "Can add exam"
+  },
+  {
+    "id": 38,
+    "content_type_id": 10,
+    "codename": "change_exam",
+    "name": "Can change exam"
+  },
+  {
+    "id": 39,
+    "content_type_id": 10,
+    "codename": "delete_exam",
+    "name": "Can delete exam"
+  },
+  {
+    "id": 40,
+    "content_type_id": 10,
+    "codename": "view_exam",
+    "name": "Can view exam"
+  },
+  {
+    "id": 41,
+    "content_type_id": 11,
+    "codename": "add_examsubmission",
+    "name": "Can add exam submission"
+  },
+  {
+    "id": 42,
+    "content_type_id": 11,
+    "codename": "change_examsubmission",
+    "name": "Can change exam submission"
+  },
+  {
+    "id": 43,
+    "content_type_id": 11,
+    "codename": "delete_examsubmission",
+    "name": "Can delete exam submission"
+  },
+  {
+    "id": 44,
+    "content_type_id": 11,
+    "codename": "view_examsubmission",
+    "name": "Can view exam submission"
+  },
+  {
+    "id": 45,
+    "content_type_id": 12,
+    "codename": "add_module",
+    "name": "Can add module"
+  },
+  {
+    "id": 46,
+    "content_type_id": 12,
+    "codename": "change_module",
+    "name": "Can change module"
+  },
+  {
+    "id": 47,
+    "content_type_id": 12,
+    "codename": "delete_module",
+    "name": "Can delete module"
+  },
+  {
+    "id": 48,
+    "content_type_id": 12,
+    "codename": "view_module",
+    "name": "Can view module"
+  },
+  {
+    "id": 49,
+    "content_type_id": 13,
+    "codename": "add_question",
+    "name": "Can add question"
+  },
+  {
+    "id": 50,
+    "content_type_id": 13,
+    "codename": "change_question",
+    "name": "Can change question"
+  },
+  {
+    "id": 51,
+    "content_type_id": 13,
+    "codename": "delete_question",
+    "name": "Can delete question"
+  },
+  {
+    "id": 52,
+    "content_type_id": 13,
+    "codename": "view_question",
+    "name": "Can view question"
+  },
+  {
+    "id": 53,
+    "content_type_id": 14,
+    "codename": "add_lesson",
+    "name": "Can add lesson"
+  },
+  {
+    "id": 54,
+    "content_type_id": 14,
+    "codename": "change_lesson",
+    "name": "Can change lesson"
+  },
+  {
+    "id": 55,
+    "content_type_id": 14,
+    "codename": "delete_lesson",
+    "name": "Can delete lesson"
+  },
+  {
+    "id": 56,
+    "content_type_id": 14,
+    "codename": "view_lesson",
+    "name": "Can view lesson"
+  },
+  {
+    "id": 57,
+    "content_type_id": 15,
+    "codename": "add_lessonprogress",
+    "name": "Can add lesson progress"
+  },
+  {
+    "id": 58,
+    "content_type_id": 15,
+    "codename": "change_lessonprogress",
+    "name": "Can change lesson progress"
+  },
+  {
+    "id": 59,
+    "content_type_id": 15,
+    "codename": "delete_lessonprogress",
+    "name": "Can delete lesson progress"
+  },
+  {
+    "id": 60,
+    "content_type_id": 15,
+    "codename": "view_lessonprogress",
+    "name": "Can view lesson progress"
+  },
+  {
+    "id": 61,
+    "content_type_id": 16,
+    "codename": "add_answer",
+    "name": "Can add answer"
+  },
+  {
+    "id": 62,
+    "content_type_id": 16,
+    "codename": "change_answer",
+    "name": "Can change answer"
+  },
+  {
+    "id": 63,
+    "content_type_id": 16,
+    "codename": "delete_answer",
+    "name": "Can delete answer"
+  },
+  {
+    "id": 64,
+    "content_type_id": 16,
+    "codename": "view_answer",
+    "name": "Can view answer"
+  },
+  {
+    "id": 65,
+    "content_type_id": 17,
+    "codename": "add_assessmentconfig",
+    "name": "Can add assessment config"
+  },
+  {
+    "id": 66,
+    "content_type_id": 17,
+    "codename": "change_assessmentconfig",
+    "name": "Can change assessment config"
+  },
+  {
+    "id": 67,
+    "content_type_id": 17,
+    "codename": "delete_assessmentconfig",
+    "name": "Can delete assessment config"
+  },
+  {
+    "id": 68,
+    "content_type_id": 17,
+    "codename": "view_assessmentconfig",
+    "name": "Can view assessment config"
+  },
+  {
+    "id": 69,
+    "content_type_id": 18,
+    "codename": "add_authconfig",
+    "name": "Can add auth config"
+  },
+  {
+    "id": 70,
+    "content_type_id": 18,
+    "codename": "change_authconfig",
+    "name": "Can change auth config"
+  },
+  {
+    "id": 71,
+    "content_type_id": 18,
+    "codename": "delete_authconfig",
+    "name": "Can delete auth config"
+  },
+  {
+    "id": 72,
+    "content_type_id": 18,
+    "codename": "view_authconfig",
+    "name": "Can view auth config"
+  }
+]

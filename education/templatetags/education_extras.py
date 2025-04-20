@@ -11,7 +11,11 @@ def get_item(dictionary, key):
     """
     if dictionary is None:
         return None
-    return dictionary.get(key)
+        
+    # Check if the object has a get method (is dict-like)
+    if hasattr(dictionary, 'get'):
+        return dictionary.get(key)
+    return None
 
 @register.filter
 def student_count(course):

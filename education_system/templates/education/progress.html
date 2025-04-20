@@ -1,0 +1,95 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Progress - Education System{% endblock %}
+
+{% block content %}
+<!-- Progress Chart -->
+<div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Learning Progress</h2>
+    <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+        <!-- Placeholder for Chart -->
+        <p class="text-gray-500">Progress chart will be displayed here</p>
+    </div>
+</div>
+
+<!-- Completed Lessons -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Completed Lessons</h2>
+    
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Course
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Lesson
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Date Completed
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Score
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <!-- Completed Lesson -->
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">Introduction to Python</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">Getting Started</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">Apr 15, 2024</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            95%
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- Completed Lesson -->
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">Web Development Basics</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">HTML Fundamentals</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">Apr 10, 2024</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            88%
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- Completed Lesson -->
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">Data Science Fundamentals</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">Data Analysis Basics</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">Apr 5, 2024</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            92%
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

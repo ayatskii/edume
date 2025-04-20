@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.utils import timezone
 from .models import User, Course, Module, Lesson, LessonProgress, Exam, Question, Choice, ExamSubmission, Answer
 from .forms import (
@@ -14,11 +14,50 @@ from .forms import (
 )
 
 def home(request):
-    """Home page view for the education system"""
-    # Simplified view just to get it working
-    return render(request, 'education/home.html', {
-        'featured_courses': []
-    })
+    """Home page view for the education system with popular courses and user's latest course"""
+    
+    # Get popular courses (courses with most students)
+    popular_courses = Course.objects.annotate(student_count=Count('students')).order_by('-student_count')[:3]
+    
+    context = {
+        'popular_courses': popular_courses,
+        'project_info': {
+            'title': 'Education System',
+            'description': 'A comprehensive learning platform built with Django',
+            'features': [
+                'Interactive courses with video content',
+                'Progress tracking and assessments',
+                'Certificate generation upon completion',
+                'Instructor and student dashboards'
+            ]
+        }
+    }
+    
+    # If user is authenticated, get their last accessed course
+    if request.user.is_authenticated:
+        # Try to get the user's most recently enrolled course
+        try:
+            last_course = request.user.courses_enrolled.all().order_by('-id').first()
+            context['last_course'] = last_course
+            
+            # Get lesson progress for this course
+            if last_course:
+                total_lessons = sum([module.lessons.count() for module in last_course.modules.all()])
+                if total_lessons > 0:
+                    completed_lessons = LessonProgress.objects.filter(
+                        user=request.user,
+                        lesson__module__course=last_course,
+                        completed=True
+                    ).count()
+                    progress = int((completed_lessons / total_lessons) * 100)
+                else:
+                    progress = 0
+                context['last_course_progress'] = progress
+        except Exception as e:
+            # If there's an error, just don't add the last course to context
+            print(f"Error fetching last course: {e}")
+    
+    return render(request, 'education/home.html', context)
 
 def register(request):
     if request.method == 'POST':
@@ -61,10 +100,12 @@ def dashboard(request):
             'upcoming_exams': upcoming_exams.filter(due_date__gt=timezone.now()),
         }
     else:
+        # Get all available courses instead of just enrolled ones
+        all_courses = Course.objects.all()
         enrolled_courses = request.user.courses_enrolled.all()
         upcoming_exams = Exam.objects.filter(course__in=enrolled_courses)
         
-        # Calculate course progress
+        # Calculate course progress for enrolled courses
         course_progress = {}
         for course in enrolled_courses:
             total_lessons = 0
@@ -86,6 +127,7 @@ def dashboard(request):
             course_progress[course.id] = progress
             
         context = {
+            'all_courses': all_courses,
             'enrolled_courses': enrolled_courses,
             'upcoming_exams': upcoming_exams.filter(due_date__gt=timezone.now()),
             'course_progress': course_progress
@@ -97,11 +139,72 @@ class CourseListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'education/course_list.html'
     context_object_name = 'courses'
-
+    paginate_by = 9  # Show 9 courses per page
+    
     def get_queryset(self):
-        if self.request.user.role == 'teacher':
-            return Course.objects.filter(instructor=self.request.user)
-        return Course.objects.filter(students=self.request.user)
+        queryset = Course.objects.all()
+        
+        # Apply search filter if provided
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) | 
+                Q(description__icontains=search_query) |
+                Q(category__icontains=search_query)
+            )
+            
+        # Apply category filter if provided
+        category = self.request.GET.get('category', '')
+        if category:
+            queryset = queryset.filter(category=category)
+            
+        # Apply difficulty filter if provided
+        difficulty = self.request.GET.get('difficulty', '')
+        if difficulty:
+            queryset = queryset.filter(difficulty=difficulty)
+            
+        return queryset
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Add filter options to context
+        context['categories'] = Course.objects.values_list('category', flat=True).distinct()
+        context['difficulties'] = ['beginner', 'intermediate', 'advanced']
+        context['current_category'] = self.request.GET.get('category', '')
+        context['current_difficulty'] = self.request.GET.get('difficulty', '')
+        context['search_query'] = self.request.GET.get('search', '')
+        
+        # Only calculate progress for students
+        if self.request.user.is_authenticated and self.request.user.role == 'student':
+            # Get enrolled courses
+            enrolled_courses = self.request.user.courses_enrolled.all()
+            context['enrolled_courses'] = enrolled_courses
+            
+            # Calculate course progress
+            course_progress = {}
+            for course in enrolled_courses:
+                total_lessons = 0
+                completed_lessons = 0
+                for module in course.modules.all():
+                    lessons = module.lessons.count()
+                    total_lessons += lessons
+                    completed_lessons += LessonProgress.objects.filter(
+                        user=self.request.user,
+                        lesson__module=module,
+                        completed=True
+                    ).count()
+                
+                if total_lessons > 0:
+                    progress = int((completed_lessons / total_lessons) * 100)
+                else:
+                    progress = 0
+                
+                course_progress[course.id] = progress
+            
+            context['course_progress'] = course_progress
+        
+        return context
 
 class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
@@ -116,20 +219,40 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
         if self.request.user.role == 'student':
             # Calculate module progress
             module_progress = {}
+            
+            # Add lesson progress map for the template
+            lesson_progress_map = {}
+            
+            # Get all progress records for this user in one query
+            progress_records = LessonProgress.objects.filter(
+                user=self.request.user,
+                lesson__module__course=self.object
+            ).select_related('lesson')
+            
+            # Create a dictionary of lesson_id -> progress record
+            progress_dict = {p.lesson_id: p for p in progress_records}
+            
             for module in self.object.modules.all():
+                # Calculate module progress
                 total_lessons = module.lessons.count()
                 if total_lessons > 0:
-                    completed_lessons = LessonProgress.objects.filter(
-                        user=self.request.user,
-                        lesson__module=module,
-                        completed=True
-                    ).count()
-                    progress = int((completed_lessons / total_lessons) * 100)
+                    lessons = module.lessons.all()
+                    completed_count = sum(1 for lesson in lessons if progress_dict.get(lesson.id, None) and progress_dict[lesson.id].completed)
+                    progress = int((completed_count / total_lessons) * 100)
                 else:
                     progress = 0
+                    
                 module_progress[module.id] = progress
+                
+                # Add lesson progress data
+                for lesson in module.lessons.all():
+                    if lesson.id not in lesson_progress_map:
+                        lesson_progress_map[lesson.id] = {
+                            self.request.user.id: progress_dict.get(lesson.id)
+                        }
             
             context['module_progress'] = module_progress
+            context['lesson_progress'] = lesson_progress_map
         
         return context
 

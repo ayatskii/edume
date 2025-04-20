@@ -4,7 +4,7 @@ from . import views
 app_name = 'education'
 
 urlpatterns = [
-    # Home page moved to main urls.py
+    # Home page is handled in the main urls.py files
     # path('', views.home, name='home'),
     
     # Authentication

@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ exam.title }} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'education:course_detail' exam.course.pk %}">
+                                    {{ exam.course.title }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ exam.title }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                    <h2>{{ exam.title }}</h2>
+                    <p class="text-muted">{{ exam.description }}</p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Exam Details</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Duration:</strong> {{ exam.duration }}</li>
+                                        <li><strong>Total Marks:</strong> {{ exam.total_marks }}</li>
+                                        <li><strong>Passing Marks:</strong> {{ exam.passing_marks }}</li>
+                                        <li><strong>Due Date:</strong> {{ exam.due_date|date:"F j, Y, g:i a" }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Submission Status</h5>
+                                    {% if submission %}
+                                        <div class="alert {% if submission.is_passed %}alert-success{% else %}alert-danger{% endif %}">
+                                            <p><strong>Status:</strong> 
+                                                {% if submission.is_passed %}
+                                                    Passed
+                                                {% else %}
+                                                    Failed
+                                                {% endif %}
+                                            </p>
+                                            <p><strong>Score:</strong> {{ submission.score }}/{{ exam.total_marks }}</p>
+                                            <p><strong>Submitted:</strong> {{ submission.submitted_at|date:"F j, Y, g:i a" }}</p>
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-info">
+                                            <p>You haven't submitted this exam yet.</p>
+                                            {% if user.role == 'student' %}
+                                                <a href="{% url 'education:take_exam' exam.pk %}" class="btn btn-primary">
+                                                    Take Exam
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if user.role == 'teacher' %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Exam Questions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group">
+                                    {% for question in exam.questions.all %}
+                                        <div class="list-group-item">
+                                            <h6>{{ question.text }}</h6>
+                                            <small class="text-muted">
+                                                Type: {{ question.get_question_type_display }} • 
+                                                Marks: {{ question.marks }}
+                                            </small>
+                                            {% if question.question_type in 'mcq,checkbox' %}
+                                                <ul class="list-unstyled mt-2">
+                                                    {% for choice in question.choices.all %}
+                                                        <li>
+                                                            <input type="{% if question.question_type == 'mcq' %}radio{% else %}checkbox{% endif %}" 
+                                                                   disabled {% if choice.is_correct %}checked{% endif %}>
+                                                            {{ choice.text }}
+                                                            {% if choice.is_correct %}
+                                                                <span class="badge bg-success">Correct</span>
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Exam Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-clock"></i> 
+                            The exam must be completed within the specified duration.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle"></i> 
+                            You need {{ exam.passing_marks }} marks to pass the exam.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-calendar"></i> 
+                            The exam must be submitted before the due date.
+                        </li>
+                        {% if exam.course.instructor == user %}
+                            <li class="list-group-item">
+                                <i class="bi bi-people"></i> 
+                                {{ exam.submissions.count }} students have submitted this exam.
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if user.role == 'teacher' %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Student Submissions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for submission in exam.submissions.all %}
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ submission.user.get_full_name }}</h6>
+                                            <small class="text-muted">
+                                                Submitted: {{ submission.submitted_at|date:"M j, g:i a" }}
+                                            </small>
+                                        </div>
+                                        <span class="badge {% if submission.is_passed %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ submission.score }}/{{ exam.total_marks }}
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <p class="text-muted">No submissions yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

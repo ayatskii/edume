@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load education_extras %}
+
+{% block title %}{{ lesson.title }} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'education:course_detail' lesson.module.course.pk %}">
+                                    {{ lesson.module.course.title }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="#">{{ lesson.module.title }}</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ lesson.title }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                    <h2>{{ lesson.title }}</h2>
+                    <div class="ratio ratio-16x9 mb-4">
+                        <iframe src="{{ lesson.video_url }}" allowfullscreen></iframe>
+                    </div>
+                    <div class="lesson-content">
+                        {{ lesson.content|safe }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if previous_lesson %}
+                                <a href="{% url 'education:lesson_detail' previous_lesson.pk %}" 
+                                   class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-left"></i> Previous Lesson
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if user.role == 'student' and not progress.completed %}
+                                <form method="post" action="{% url 'education:mark_lesson_complete' lesson.pk %}" 
+                                      class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success">
+                                        Mark as Complete
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if next_lesson %}
+                                <a href="{% url 'education:lesson_detail' next_lesson.pk %}" 
+                                   class="btn btn-outline-primary">
+                                    Next Lesson <i class="bi bi-arrow-right"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Lesson Progress</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.role == 'student' %}
+                        {% if progress.completed %}
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle-fill"></i> 
+                                You completed this lesson on {{ progress.completed_at|date:"F j, Y" }}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle-fill"></i> 
+                                This lesson is not yet completed
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ module_progress }}%" 
+                             aria-valuenow="{{ module_progress }}" 
+                             aria-valuemin="0" aria-valuemax="100">
+                            {{ module_progress }}%
+                        </div>
+                    </div>
+                    <p class="text-muted">Module Progress</p>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Course Navigation</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for module_lesson in lesson.module.lessons.all %}
+                            <a href="{% url 'education:lesson_detail' module_lesson.pk %}" 
+                               class="list-group-item list-group-item-action {% if module_lesson == lesson %}active{% endif %}">
+                                {{ module_lesson.title }}
+                                {% if user.role == 'student' %}
+                                    {% with lesson_progress=module_lesson.progress|get_item:user.id %}
+                                        {% if lesson_progress.completed %}
+                                            <span class="badge bg-success float-end">
+                                                <i class="bi bi-check"></i>
+                                            </span>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

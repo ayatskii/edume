@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Edit Module{% else %}Add Module{% endif %} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{% if object %}Edit Module{% else %}Add New Module{% endif %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">Module Title</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Briefly describe what students will learn in this module.</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.order.id_for_label }}" class="form-label">Order</label>
+                            {{ form.order }}
+                            {% if form.order.errors %}
+                                <div class="text-danger">
+                                    {{ form.order.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">The order in which this module appears in the course (lower numbers appear first).</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                {% if object %}Update Module{% else %}Add Module{% endif %}
+                            </button>
+                            <a href="{% url 'education:course_detail' course_id %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-control, .form-select {
+        margin-bottom: 0;
+    }
+    textarea {
+        min-height: 100px;
+    }
+</style>
+{% endblock %} 

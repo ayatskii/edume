@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Answer Choice - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'education:course_detail' question.exam.course.pk %}">
+                                    {{ question.exam.course.title }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'education:exam_detail' question.exam.pk %}">
+                                    {{ question.exam.title }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Add Answer Choice
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                    <h3>Add Answer Choice</h3>
+                    <div class="alert alert-info mb-4">
+                        <strong>Question:</strong> {{ question.text }}
+                        <div class="mt-2">
+                            <span class="badge bg-primary">{{ question.get_question_type_display }}</span>
+                            {% if question.question_type == 'mcq' %}
+                                <span class="badge bg-secondary">Select one answer only</span>
+                            {% elif question.question_type == 'checkbox' %}
+                                <span class="badge bg-secondary">Select multiple answers</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if choices %}
+                        <div class="mb-4">
+                            <h5>Current Answer Choices:</h5>
+                            <ul class="list-group">
+                                {% for choice in choices %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ choice.text }}
+                                        {% if choice.is_correct %}
+                                            <span class="badge bg-success">Correct Answer</span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.text.id_for_label }}" class="form-label">Answer Text</label>
+                            {{ form.text }}
+                            {% if form.text.errors %}
+                                <div class="text-danger">
+                                    {{ form.text.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4 form-check">
+                            {{ form.is_correct }}
+                            <label class="form-check-label" for="{{ form.is_correct.id_for_label }}">
+                                This is a correct answer
+                            </label>
+                            {% if form.is_correct.errors %}
+                                <div class="text-danger">
+                                    {{ form.is_correct.errors }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if question.question_type == 'mcq' and correct_exists %}
+                                <div class="text-warning mt-1">
+                                    <small>
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        Warning: A correct answer already exists. For multiple choice questions, only one answer should be correct.
+                                    </small>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary" name="save">Save</button>
+                            <button type="submit" class="btn btn-outline-primary" name="add_another">Save and Add Another</button>
+                            <a href="{% url 'education:exam_detail' question.exam.pk %}" class="btn btn-outline-secondary">Done</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

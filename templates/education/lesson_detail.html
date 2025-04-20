@@ -3,6 +3,14 @@
 
 {% block title %}{{ lesson.title }} - Education System{% endblock %}
 
+{% block extra_css %}
+<style>
+    .progress-bar {
+        transition: width 0.6s ease;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -86,8 +94,8 @@
                         {% endif %}
                     {% endif %}
                     <div class="progress mb-3">
-                        <div class="progress-bar" role="progressbar" 
-                             style="width: {{ module_progress }}%" 
+                        <div class="progress-bar progress-width" role="progressbar" 
+                             data-progress="{{ module_progress }}"
                              aria-valuenow="{{ module_progress }}" 
                              aria-valuemin="0" aria-valuemax="100">
                             {{ module_progress }}%
@@ -105,16 +113,14 @@
                     <div class="list-group">
                         {% for module_lesson in lesson.module.lessons.all %}
                             <a href="{% url 'education:lesson_detail' module_lesson.pk %}" 
-                               class="list-group-item list-group-item-action {% if module_lesson == lesson %}active{% endif %}">
+                               class="list-group-item list-group-item-action {% if module_lesson.id == lesson.id %}active{% endif %}">
                                 {{ module_lesson.title }}
                                 {% if user.role == 'student' %}
-                                    {% with lesson_progress=module_lesson.progress|get_item:user.id %}
-                                        {% if lesson_progress.completed %}
-                                            <span class="badge bg-success float-end">
-                                                <i class="bi bi-check"></i>
-                                            </span>
-                                        {% endif %}
-                                    {% endwith %}
+                                    {% if module_lesson.id in completed_lessons %}
+                                        <span class="badge bg-success float-end">
+                                            <i class="bi bi-check"></i>
+                                        </span>
+                                    {% endif %}
                                 {% endif %}
                             </a>
                         {% endfor %}
@@ -124,4 +130,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var progressBars = document.querySelectorAll('.progress-width');
+        progressBars.forEach(function(bar) {
+            var progressValue = bar.getAttribute('data-progress');
+            bar.style.width = progressValue + '%';
+        });
+    });
+</script>
 {% endblock %} 

@@ -37,10 +37,14 @@
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'education:course_list' %}">Courses</a>
+                            <a class="nav-link" href="{% url 'education:course_list' %}">
+                                <i class="bi bi-journal-richtext"></i> Courses
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'education:dashboard' %}">Dashboard</a>
+                            <a class="nav-link" href="{% url 'education:dashboard' %}">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
                         </li>
                         {% if user.role == 'teacher' %}
                             <li class="nav-item">

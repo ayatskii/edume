@@ -342,14 +342,19 @@ def lesson_detail(request, pk):
     # Calculate module progress
     if request.user.role == 'student':
         total_lessons = module.lessons.count()
-        completed_lessons = LessonProgress.objects.filter(
+        
+        # Get all completed lessons for this module
+        completed_progress = LessonProgress.objects.filter(
             user=request.user,
             lesson__module=module,
             completed=True
-        ).count()
+        ).select_related('lesson')
+        
+        completed_lessons = [prog.lesson_id for prog in completed_progress]
+        completed_lessons_count = len(completed_lessons)
         
         if total_lessons > 0:
-            module_progress = int((completed_lessons / total_lessons) * 100)
+            module_progress = int((completed_lessons_count / total_lessons) * 100)
         else:
             module_progress = 0
         
@@ -361,13 +366,15 @@ def lesson_detail(request, pk):
     else:
         progress = None
         module_progress = 0
+        completed_lessons = []
     
     context = {
         'lesson': lesson,
         'progress': progress,
         'module_progress': module_progress,
         'previous_lesson': previous_lesson,
-        'next_lesson': next_lesson
+        'next_lesson': next_lesson,
+        'completed_lessons': completed_lessons
     }
     
     return render(request, 'education/lesson_detail.html', context)

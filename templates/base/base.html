@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Education System{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6', // blue-500
+                        primaryHover: '#2563EB', // blue-600
+                        secondary: '#0D9488', // teal-500
+                        secondaryHover: '#0F766E', // teal-600
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    {% if user.is_authenticated %}
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{% url 'dashboard' %}" class="text-xl font-bold text-gray-900">EduSys</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="ml-3 relative">
+                        <div class="flex items-center">
+                            <span class="text-gray-700 mr-2">{{ user.get_full_name|default:user.username }}</span>
+                            <img class="h-8 w-8 rounded-full" src="PLACEHOLDER" alt="User avatar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-md mt-16">
+        <div class="h-full px-3 py-4 overflow-y-auto">
+            <ul class="space-y-2">
+                <li>
+                    <a href="{% url 'dashboard' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'courses' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                        <span>Courses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'progress' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                        <span>Progress</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'exams' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                        <span>Exams</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'settings' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 mt-16 p-8">
+        {% block content %}{% endblock %}
+    </main>
+    {% else %}
+    <!-- Public Layout -->
+    <main class="min-h-screen flex items-center justify-center bg-gray-50">
+        {% block auth_content %}{% endblock %}
+    </main>
+    {% endif %}
+</body>
+</html> 

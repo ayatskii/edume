@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Edit Course{% else %}Create Course{% endif %} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{% if object %}Edit Course: {{ object.title }}{% else %}Create New Course{% endif %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">Course Title</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Provide a detailed description of what students will learn in this course.</div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger">
+                                        {{ form.category.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.difficulty.id_for_label }}" class="form-label">Difficulty Level</label>
+                                {{ form.difficulty }}
+                                {% if form.difficulty.errors %}
+                                    <div class="text-danger">
+                                        {{ form.difficulty.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.thumbnail.id_for_label }}" class="form-label">Course Thumbnail</label>
+                            {% if object and object.thumbnail %}
+                                <div class="mb-2">
+                                    <img src="{{ object.thumbnail.url }}" alt="Current thumbnail" class="img-thumbnail" style="max-width: 200px;">
+                                </div>
+                            {% endif %}
+                            {{ form.thumbnail }}
+                            {% if form.thumbnail.errors %}
+                                <div class="text-danger">
+                                    {{ form.thumbnail.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Upload an image that represents your course (recommended size: 1280x720 pixels).</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                {% if object %}Update Course{% else %}Create Course{% endif %}
+                            </button>
+                            <a href="{% url 'education:course_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-control, .form-select {
+        margin-bottom: 0;
+    }
+    textarea {
+        min-height: 150px;
+    }
+</style>
+{% endblock %} 

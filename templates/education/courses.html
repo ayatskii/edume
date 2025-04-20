@@ -1,0 +1,83 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Courses - Education System{% endblock %}
+
+{% block content %}
+<!-- Filter Bar -->
+<div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+            <input type="text" placeholder="Search courses..." 
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div class="flex-1">
+            <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <option value="">All Categories</option>
+                <option value="programming">Programming</option>
+                <option value="mathematics">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="language">Language</option>
+            </select>
+        </div>
+        <div>
+            <button class="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Apply Filters
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Courses Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Course Card -->
+    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1 transition-all duration-200">
+        <div class="aspect-w-16 aspect-h-9">
+            <img src="PLACEHOLDER" alt="Course banner" class="object-cover rounded-t-lg">
+        </div>
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Introduction to Python</h3>
+            <p class="text-gray-600 mb-4">Learn the fundamentals of Python programming language and start your coding journey.</p>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">12 Lessons</span>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    View Course
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Card -->
+    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1 transition-all duration-200">
+        <div class="aspect-w-16 aspect-h-9">
+            <img src="PLACEHOLDER" alt="Course banner" class="object-cover rounded-t-lg">
+        </div>
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Web Development Basics</h3>
+            <p class="text-gray-600 mb-4">Master HTML, CSS, and JavaScript to build modern web applications.</p>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">15 Lessons</span>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    View Course
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Card -->
+    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1 transition-all duration-200">
+        <div class="aspect-w-16 aspect-h-9">
+            <img src="PLACEHOLDER" alt="Course banner" class="object-cover rounded-t-lg">
+        </div>
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Data Science Fundamentals</h3>
+            <p class="text-gray-600 mb-4">Learn data analysis, visualization, and machine learning concepts.</p>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">20 Lessons</span>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    View Course
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

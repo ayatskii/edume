@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load education_extras %}
+
+{% block title %}{{ course.title }} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{ course.thumbnail.url }}" class="img-fluid rounded" alt="{{ course.title }}">
+                        </div>
+                        <div class="col-md-8">
+                            <h2>{{ course.title }}</h2>
+                            <p class="text-muted">Instructor: {{ course.instructor.get_full_name }}</p>
+                            <p>{{ course.description }}</p>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-primary">{{ course.category }}</span>
+                                <span class="badge bg-secondary">{{ course.difficulty }}</span>
+                            </div>
+                            {% if user.role == 'student' and user not in course.students.all %}
+                                <form method="post" action="{% url 'education:enroll_course' course.pk %}" class="mt-3">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Enroll in Course</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Course Modules</h4>
+                </div>
+                <div class="card-body">
+                    {% for module in modules %}
+                        <div class="accordion mb-3" id="moduleAccordion{{ module.id }}">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ module.id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#collapse{{ module.id }}" aria-expanded="false" 
+                                            aria-controls="collapse{{ module.id }}">
+                                        {{ module.title }}
+                                        {% if user.role == 'student' %}
+                                            <span class="badge bg-primary ms-2">
+                                                {{ module_progress|get_item:module.id }}% Complete
+                                            </span>
+                                        {% endif %}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ module.id }}" class="accordion-collapse collapse" 
+                                     aria-labelledby="heading{{ module.id }}" data-bs-parent="#moduleAccordion{{ module.id }}">
+                                    <div class="accordion-body">
+                                        <p>{{ module.description }}</p>
+                                        <div class="list-group">
+                                            {% for lesson in module.lessons.all %}
+                                                <a href="{% url 'education:lesson_detail' lesson.pk %}" 
+                                                   class="list-group-item list-group-item-action">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <h6 class="mb-1">{{ lesson.title }}</h6>
+                                                            <small class="text-muted">{{ lesson.duration }}</small>
+                                                        </div>
+                                                        {% if user.role == 'student' %}
+                                                            {% with progress=lesson.progress|get_item:user.id %}
+                                                                {% if progress.completed %}
+                                                                    <span class="badge bg-success">Completed</span>
+                                                                {% else %}
+                                                                    <span class="badge bg-secondary">Not Started</span>
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                        {% endif %}
+                                                    </div>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Course Exams</h4>
+                </div>
+                <div class="card-body">
+                    {% if exams %}
+                        <div class="list-group">
+                            {% for exam in exams %}
+                                <a href="{% url 'education:exam_detail' exam.pk %}" 
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-1">{{ exam.title }}</h6>
+                                        <small class="text-muted">Due: {{ exam.due_date|date:"M j" }}</small>
+                                    </div>
+                                    <small class="text-muted">{{ exam.duration }} • {{ exam.total_marks }} marks</small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No exams available for this course.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

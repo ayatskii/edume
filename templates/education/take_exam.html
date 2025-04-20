@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Exam: {{ exam.title }} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'education:course_detail' exam.course.pk %}">
+                            {{ exam.course.title }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'education:exam_detail' exam.pk %}">
+                            {{ exam.title }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Take Exam
+                    </li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h2>{{ exam.title }}</h2>
+                    <p class="text-muted">{{ exam.description }}</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="alert alert-info mb-0">
+                        <div class="d-flex justify-content-between">
+                            <div><strong>Duration:</strong> {{ exam.duration }}</div>
+                            <div><strong>Total Marks:</strong> {{ exam.total_marks }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="exam-questions">
+                    {% for question, form in questions_and_forms %}
+                    <div class="card mb-4 question-card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5 class="mb-0">Question {{ forloop.counter }}</h5>
+                            <span class="badge bg-primary">{{ question.marks }} marks</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="question-text mb-3">{{ question.text }}</p>
+                            
+                            <div class="form-group">
+                                {% if question.question_type == 'mcq' %}
+                                    {% for choice in form.selected_choices %}
+                                        <div class="form-check mb-2">
+                                            {{ choice.tag }}
+                                            <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                                {{ choice.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                
+                                {% elif question.question_type == 'checkbox' %}
+                                    {% for choice in form.selected_choices %}
+                                        <div class="form-check mb-2">
+                                            {{ choice.tag }}
+                                            <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                                {{ choice.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                
+                                {% elif question.question_type == 'text' %}
+                                    {{ form.text_answer }}
+                                
+                                {% elif question.question_type == 'essay' %}
+                                    {{ form.text_answer }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="submission-section mt-4">
+                    <div class="alert alert-warning mb-3">
+                        <i class="bi bi-exclamation-triangle-fill"></i> 
+                        Once submitted, you cannot change your answers. Please review all your answers before submitting.
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'education:exam_detail' exam.pk %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Submit Exam</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .question-text {
+        font-size: 1.1rem;
+    }
+    .question-card {
+        border-left: 4px solid #007bff;
+    }
+    textarea.form-control {
+        min-height: 150px;
+    }
+</style>
+{% endblock %} 

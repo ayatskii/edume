@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load education_extras %}
+
+{% block title %}Courses - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Available Courses</h2>
+            <p class="lead">Browse our selection of courses and start learning today!</p>
+        </div>
+        {% if user.is_authenticated and user.role == 'teacher' %}
+        <div class="col-auto">
+            <a href="{% url 'education:course_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create Course
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Filter Courses</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get">
+                        <div class="mb-3">
+                            <label for="search" class="form-label">Search</label>
+                            <input type="text" class="form-control" id="search" name="search" 
+                                   value="{{ request.GET.search|default:'' }}">
+                        </div>
+                        <hr>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            {% if courses %}
+                <div class="row">
+                    {% for course in courses %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ course.title }}</h5>
+                                    <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                                    <p class="text-muted">Instructor: {{ course.instructor.get_full_name }}</p>
+                                    
+                                    {% if user.is_authenticated %}
+                                        {% if user in course.students.all %}
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: {{ course_progress|get_item:course.id }}%"
+                                                     aria-valuenow="{{ course_progress|get_item:course.id }}" 
+                                                     aria-valuemin="0" aria-valuemax="100">
+                                                    {{ course_progress|get_item:course.id }}%
+                                                </div>
+                                            </div>
+                                            <a href="{% url 'education:course_detail' course.pk %}" class="btn btn-primary w-100">
+                                                Continue Learning
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'education:course_detail' course.pk %}" class="btn btn-outline-primary w-100 mb-2">
+                                                View Details
+                                            </a>
+                                            <form method="post" action="{% url 'education:enroll_course' course.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success w-100">
+                                                    Enroll Now
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="{% url 'education:course_detail' course.pk %}" class="btn btn-outline-primary w-100 mb-2">
+                                            View Details
+                                        </a>
+                                        <a href="{% url 'education:login' %}?next={% url 'education:course_detail' course.pk %}" 
+                                           class="btn btn-success w-100">
+                                            Login to Enroll
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">First</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Previous</a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">{{ num }}</a>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Last</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    <p>No courses found matching your criteria.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load education_extras %}
+
+{% block title %}Dashboard - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Welcome, {{ user.get_full_name }}!</h2>
+
+    {% if user.role == 'teacher' %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Your Courses</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if teacher_courses %}
+                            <div class="row">
+                                {% for course in teacher_courses %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100">
+                                            <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ course.title }}</h5>
+                                                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                                                <a href="{% url 'education:course_detail' course.pk %}" class="btn btn-primary">View Course</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>You haven't created any courses yet.</p>
+                            <a href="{% url 'education:course_create' %}" class="btn btn-primary">Create Course</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Your Enrolled Courses</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if enrolled_courses %}
+                            <div class="row">
+                                {% for course in enrolled_courses %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100">
+                                            <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="{{ course.title }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ course.title }}</h5>
+                                                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                                                <div class="progress mb-2">
+                                                    <div class="progress-bar" role="progressbar" 
+                                                         style="width: {{ course_progress|get_item:course.id }}%"
+                                                         aria-valuenow="{{ course_progress|get_item:course.id }}" 
+                                                         aria-valuemin="0" aria-valuemax="100">
+                                                        {{ course_progress|get_item:course.id }}%
+                                                    </div>
+                                                </div>
+                                                <a href="{% url 'education:course_detail' course.pk %}" class="btn btn-primary">Continue Learning</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>You haven't enrolled in any courses yet.</p>
+                            <a href="{% url 'education:course_list' %}" class="btn btn-primary">Browse Courses</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Upcoming Exams</h4>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_exams %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Course</th>
+                                        <th>Exam</th>
+                                        <th>Due Date</th>
+                                        <th>Duration</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for exam in upcoming_exams %}
+                                        <tr>
+                                            <td>{{ exam.course.title }}</td>
+                                            <td>{{ exam.title }}</td>
+                                            <td>{{ exam.due_date|date:"F j, Y, g:i a" }}</td>
+                                            <td>{{ exam.duration }}</td>
+                                            <td>
+                                                <a href="{% url 'education:exam_detail' exam.pk %}" class="btn btn-sm btn-primary">View Details</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p>No upcoming exams.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

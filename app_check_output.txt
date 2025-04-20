@@ -1,0 +1,43 @@
+Current working directory: C:\Users\merge\education_system
+
+INSTALLED_APPS in settings.py:
+ - django.contrib.admin
+ - django.contrib.auth
+ - django.contrib.contenttypes
+ - django.contrib.sessions
+ - django.contrib.messages
+ - django.contrib.staticfiles
+ - education
+ - assessment
+ - authentication
+
+Apps registered with Django:
+ - django.contrib.admin (label: admin, path: C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\admin)
+ - django.contrib.auth (label: auth, path: C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth)
+ - django.contrib.contenttypes (label: contenttypes, path: C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\contenttypes)
+ - django.contrib.sessions (label: sessions, path: C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\sessions)
+ - django.contrib.messages (label: messages, path: C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\messages)
+ - django.contrib.staticfiles (label: staticfiles, path: C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\staticfiles)
+ - education (label: education, path: C:\Users\merge\education_system\education)
+ - assessment (label: assessment, path: C:\Users\merge\education_system\assessment)
+ - authentication (label: authentication, path: C:\Users\merge\education_system\authentication)
+
+Migration Loader information:
+Disk migrations: [('admin', '0002_logentry_remove_auto_add'), ('admin', '0001_initial'), ('admin', '0003_logentry_add_action_flag_choices'), ('auth', '0012_alter_user_first_name_max_length'), ('auth', '0008_alter_user_username_max_length'), ('auth', '0009_alter_user_last_name_max_length'), ('auth', '0003_alter_user_email_max_length'), ('auth', '0006_require_contenttypes_0002'), ('auth', '0004_alter_user_username_opts'), ('auth', '0002_alter_permission_name_max_length'), ('auth', '0010_alter_group_name_max_length'), ('auth', '0001_initial'), ('auth', '0011_update_proxy_permissions'), ('auth', '0005_alter_user_last_login_null'), ('auth', '0007_alter_validators_add_error_messages'), ('contenttypes', '0001_initial'), ('contenttypes', '0002_remove_content_type_name'), ('sessions', '0001_initial'), ('education', '0001_initial')]
+Graph nodes: [('admin', '0002_logentry_remove_auto_add'), ('admin', '0001_initial'), ('admin', '0003_logentry_add_action_flag_choices'), ('auth', '0012_alter_user_first_name_max_length'), ('auth', '0008_alter_user_username_max_length'), ('auth', '0009_alter_user_last_name_max_length'), ('auth', '0003_alter_user_email_max_length'), ('auth', '0006_require_contenttypes_0002'), ('auth', '0004_alter_user_username_opts'), ('auth', '0002_alter_permission_name_max_length'), ('auth', '0010_alter_group_name_max_length'), ('auth', '0001_initial'), ('auth', '0011_update_proxy_permissions'), ('auth', '0005_alter_user_last_login_null'), ('auth', '0007_alter_validators_add_error_messages'), ('contenttypes', '0001_initial'), ('contenttypes', '0002_remove_content_type_name'), ('sessions', '0001_initial'), ('education', '0001_initial')]
+
+Detailed check of the education app:
+Module location: C:\Users\merge\education_system\education\__init__.py
+Module path: ['C:\\Users\\merge\\education_system\\education']
+Migrations module location: C:\Users\merge\education_system\education\migrations\__init__.py
+Migrations module path: ['C:\\Users\\merge\\education_system\\education\\migrations']
+Initial migration module found at: C:\Users\merge\education_system\education\migrations\0001_initial.py
+Migration class: <class 'education.migrations.0001_initial.Migration'>
+
+Python path:
+ - C:\Users\merge\education_system
+ - C:\Users\merge\AppData\Local\Programs\Python\Python312\python312.zip
+ - C:\Users\merge\AppData\Local\Programs\Python\Python312\DLLs
+ - C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib
+ - C:\Users\merge\AppData\Local\Programs\Python\Python312
+ - C:\Users\merge\AppData\Local\Programs\Python\Python312\Lib\site-packages

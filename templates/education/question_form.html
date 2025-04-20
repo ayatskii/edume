@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Question - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'education:course_detail' exam.course.pk %}">
+                                    {{ exam.course.title }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'education:exam_detail' exam.pk %}">
+                                    {{ exam.title }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Add Question
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                    <h3>Add Question to "{{ exam.title }}"</h3>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.question_type.id_for_label }}" class="form-label">Question Type</label>
+                            {{ form.question_type }}
+                            {% if form.question_type.errors %}
+                                <div class="text-danger">
+                                    {{ form.question_type.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <ul class="mb-0 ps-3">
+                                    <li>Multiple Choice: Student selects one correct answer</li>
+                                    <li>Checkbox: Student selects multiple correct answers</li>
+                                    <li>Short Answer: Student enters a short text response</li>
+                                    <li>Essay: Student writes a longer text response</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.text.id_for_label }}" class="form-label">Question Text</label>
+                            {{ form.text }}
+                            {% if form.text.errors %}
+                                <div class="text-danger">
+                                    {{ form.text.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.marks.id_for_label }}" class="form-label">Marks</label>
+                                {{ form.marks }}
+                                {% if form.marks.errors %}
+                                    <div class="text-danger">
+                                        {{ form.marks.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.order.id_for_label }}" class="form-label">Order</label>
+                                {{ form.order }}
+                                {% if form.order.errors %}
+                                    <div class="text-danger">
+                                        {{ form.order.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Question</button>
+                            <a href="{% url 'education:exam_detail' exam.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const questionTypeSelect = document.getElementById('{{ form.question_type.id_for_label }}');
+        const questionInfoText = document.querySelector('.form-text ul');
+        
+        questionTypeSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            if (selectedValue === 'mcq' || selectedValue === 'checkbox') {
+                questionInfoText.innerHTML = '<li class="text-info">You will be able to add answer choices in the next step.</li>';
+            } else {
+                questionInfoText.innerHTML = `
+                    <li>Multiple Choice: Student selects one correct answer</li>
+                    <li>Checkbox: Student selects multiple correct answers</li>
+                    <li>Short Answer: Student enters a short text response</li>
+                    <li>Essay: Student writes a longer text response</li>
+                `;
+            }
+        });
+    });
+</script>
+{% endblock %} 

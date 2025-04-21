@@ -285,14 +285,28 @@ class CourseCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.instructor = self.request.user
         return super().form_valid(form)
 
+class CourseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Course
+    template_name = 'education/course_confirm_delete.html'
+    success_url = reverse_lazy('education:course_list')
+    
+    def test_func(self):
+        # Allow any teacher to delete courses
+        return self.request.user.role == 'teacher'
+    
+    def delete(self, request, *args, **kwargs):
+        course = self.get_object()
+        messages.success(request, f'Course "{course.title}" has been deleted.')
+        return super().delete(request, *args, **kwargs)
+
 class ModuleCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Module
     form_class = ModuleForm
     template_name = 'education/module_form.html'
 
     def test_func(self):
-        course = get_object_or_404(Course, pk=self.kwargs['course_id'])
-        return self.request.user == course.instructor
+        # Allow any teacher to create modules for any course
+        return self.request.user.role == 'teacher'
 
     def form_valid(self, form):
         form.instance.course = get_object_or_404(Course, pk=self.kwargs['course_id'])
@@ -304,6 +318,7 @@ class ModuleCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course_id'] = self.kwargs['course_id']
+        context['course'] = get_object_or_404(Course, pk=self.kwargs['course_id'])
         return context
 
 class LessonCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -312,8 +327,8 @@ class LessonCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = 'education/lesson_form.html'
 
     def test_func(self):
-        module = get_object_or_404(Module, pk=self.kwargs['module_id'])
-        return self.request.user == module.course.instructor
+        # Allow any teacher to create lessons for any module
+        return self.request.user.role == 'teacher'
 
     def form_valid(self, form):
         form.instance.module = get_object_or_404(Module, pk=self.kwargs['module_id'])
@@ -401,8 +416,8 @@ class ExamCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = 'education/exam_form.html'
 
     def test_func(self):
-        course = get_object_or_404(Course, pk=self.kwargs['course_id'])
-        return self.request.user == course.instructor
+        # Allow any teacher to create exams for any course
+        return self.request.user.role == 'teacher'
 
     def form_valid(self, form):
         form.instance.course = get_object_or_404(Course, pk=self.kwargs['course_id'])
@@ -414,6 +429,7 @@ class ExamCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course_id'] = self.kwargs['course_id']
+        context['course'] = get_object_or_404(Course, pk=self.kwargs['course_id'])
         return context
 
 class ExamDetailView(LoginRequiredMixin, DetailView):
@@ -530,8 +546,8 @@ class QuestionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = 'education/question_form.html'
     
     def test_func(self):
-        exam = get_object_or_404(Exam, pk=self.kwargs['exam_id'])
-        return self.request.user == exam.course.instructor
+        # Allow any teacher to create questions for exams
+        return self.request.user.role == 'teacher'
     
     def form_valid(self, form):
         form.instance.exam = get_object_or_404(Exam, pk=self.kwargs['exam_id'])
@@ -544,7 +560,9 @@ class QuestionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['exam'] = get_object_or_404(Exam, pk=self.kwargs['exam_id'])
+        exam = get_object_or_404(Exam, pk=self.kwargs['exam_id'])
+        context['exam'] = exam
+        context['course'] = exam.course
         return context
 
 class ChoiceCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -553,8 +571,8 @@ class ChoiceCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = 'education/choice_form.html'
     
     def test_func(self):
-        question = get_object_or_404(Question, pk=self.kwargs['question_id'])
-        return self.request.user == question.exam.course.instructor
+        # Allow any teacher to create choices for questions
+        return self.request.user.role == 'teacher'
     
     def form_valid(self, form):
         form.instance.question = get_object_or_404(Question, pk=self.kwargs['question_id'])
@@ -575,9 +593,59 @@ class ChoiceCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         question = get_object_or_404(Question, pk=self.kwargs['question_id'])
         context['question'] = question
         context['choices'] = question.choices.all()
+        context['exam'] = question.exam
+        context['course'] = question.exam.course
         
         # Check if a correct choice already exists for MCQ questions
         if question.question_type == 'mcq':
             context['correct_exists'] = question.choices.filter(is_correct=True).exists()
         
         return context
+
+class ModuleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Module
+    template_name = 'education/module_confirm_delete.html'
+    
+    def test_func(self):
+        # Allow any teacher to delete modules
+        return self.request.user.role == 'teacher'
+    
+    def get_success_url(self):
+        return reverse_lazy('education:course_detail', kwargs={'pk': self.object.course.pk})
+    
+    def delete(self, request, *args, **kwargs):
+        module = self.get_object()
+        messages.success(request, f'Module "{module.title}" has been deleted.')
+        return super().delete(request, *args, **kwargs)
+
+class LessonDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Lesson
+    template_name = 'education/lesson_confirm_delete.html'
+    
+    def test_func(self):
+        # Allow any teacher to delete lessons
+        return self.request.user.role == 'teacher'
+    
+    def get_success_url(self):
+        return reverse_lazy('education:course_detail', kwargs={'pk': self.object.module.course.pk})
+    
+    def delete(self, request, *args, **kwargs):
+        lesson = self.get_object()
+        messages.success(request, f'Lesson "{lesson.title}" has been deleted.')
+        return super().delete(request, *args, **kwargs)
+
+class ExamDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Exam
+    template_name = 'education/exam_confirm_delete.html'
+    
+    def test_func(self):
+        # Allow any teacher to delete exams
+        return self.request.user.role == 'teacher'
+    
+    def get_success_url(self):
+        return reverse_lazy('education:course_detail', kwargs={'pk': self.object.course.pk})
+    
+    def delete(self, request, *args, **kwargs):
+        exam = self.get_object()
+        messages.success(request, f'Exam "{exam.title}" has been deleted.')
+        return super().delete(request, *args, **kwargs)

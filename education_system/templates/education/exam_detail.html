@@ -23,6 +23,14 @@
                     <h2>{{ exam.title }}</h2>
                     <p class="text-muted">{{ exam.description }}</p>
                     
+                    {% if user.role == 'teacher' %}
+                        <div class="mb-4">
+                            <a href="{% url 'education:exam_delete' exam.pk %}" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Delete Exam
+                            </a>
+                        </div>
+                    {% endif %}
+
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="card">
@@ -70,8 +78,11 @@
 
                     {% if user.role == 'teacher' %}
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5>Exam Questions</h5>
+                                <a href="{% url 'education:question_create' exam.pk %}" class="btn btn-sm btn-success">
+                                    <i class="bi bi-plus-circle"></i> Add Question
+                                </a>
                             </div>
                             <div class="card-body">
                                 <div class="list-group">
@@ -95,7 +106,21 @@
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
+                                                {% if question.choices.count == 0 %}
+                                                    <div class="mt-2">
+                                                        <a href="{% url 'education:choice_create' question.id %}" class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-plus-circle"></i> Add Choices
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
                                             {% endif %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-info">
+                                            <p>No questions added to this exam yet.</p>
+                                            <a href="{% url 'education:question_create' exam.pk %}" class="btn btn-success">
+                                                <i class="bi bi-plus-circle"></i> Add First Question
+                                            </a>
                                         </div>
                                     {% endfor %}
                                 </div>

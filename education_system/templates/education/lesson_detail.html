@@ -33,6 +33,15 @@
                 </div>
                 <div class="card-body">
                     <h2>{{ lesson.title }}</h2>
+                    
+                    {% if user.role == 'teacher' %}
+                        <div class="mb-3">
+                            <a href="{% url 'education:lesson_delete' lesson.pk %}" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Delete Lesson
+                            </a>
+                        </div>
+                    {% endif %}
+                    
                     <div class="ratio ratio-16x9 mb-4">
                         <iframe src="{{ lesson.video_url }}" allowfullscreen></iframe>
                     </div>

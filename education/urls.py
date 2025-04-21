@@ -24,19 +24,23 @@ urlpatterns = [
     path('course/create/', views.CourseCreateView.as_view(), name='course_create'),
     path('course/<int:pk>/', views.CourseDetailView.as_view(), name='course_detail'),
     path('course/<int:pk>/enroll/', views.enroll_course, name='enroll_course'),
+    path('course/<int:pk>/delete/', views.CourseDeleteView.as_view(), name='course_delete'),
     
     # Modules
     path('course/<int:course_id>/module/create/', views.ModuleCreateView.as_view(), name='module_create'),
+    path('module/<int:pk>/delete/', views.ModuleDeleteView.as_view(), name='module_delete'),
     
     # Lessons
     path('module/<int:module_id>/lesson/create/', views.LessonCreateView.as_view(), name='lesson_create'),
     path('lesson/<int:pk>/', views.lesson_detail, name='lesson_detail'),
     path('lesson/<int:pk>/complete/', views.mark_lesson_complete, name='mark_lesson_complete'),
+    path('lesson/<int:pk>/delete/', views.LessonDeleteView.as_view(), name='lesson_delete'),
     
     # Exams
     path('course/<int:course_id>/exam/create/', views.ExamCreateView.as_view(), name='exam_create'),
     path('exam/<int:pk>/', views.ExamDetailView.as_view(), name='exam_detail'),
     path('exam/<int:pk>/take/', views.take_exam, name='take_exam'),
+    path('exam/<int:pk>/delete/', views.ExamDeleteView.as_view(), name='exam_delete'),
     
     # Questions and Choices
     path('exam/<int:exam_id>/question/create/', views.QuestionCreateView.as_view(), name='question_create'),

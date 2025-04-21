@@ -1,0 +1,13 @@
+Django>=5.0,<6.0
+Pillow>=11.0.0  # For image handling
+django-allauth>=0.65.0  # For authentication, if used
+django-htmx>=1.0.0  # For HTMX integration, if used
+python-dateutil>=2.8.0  # For date handling
+tqdm>=4.0.0  # For progress bars
+requests>=2.0.0  # For HTTP requests 
+asgiref==3.8.1
+django-tailwind==4.0.1
+pillow==11.2.1
+psycopg2-binary==2.9.10
+sqlparse==0.5.3
+tzdata==2025.2

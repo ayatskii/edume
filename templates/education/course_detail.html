@@ -14,8 +14,30 @@
                             <img src="{{ course.thumbnail.url }}" class="img-fluid rounded" alt="{{ course.title }}">
                         </div>
                         <div class="col-md-8">
-                            <h2>{{ course.title }}</h2>
-                            <p class="text-muted">Instructor: {{ course.instructor.get_full_name }}</p>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h2>{{ course.title }}</h2>
+                                    <p class="text-muted">Instructor: {{ course.instructor.get_full_name }}</p>
+                                </div>
+                                
+                                <!-- Instructor Controls -->
+                                {% if user.role == 'teacher' %}
+                                    <div>
+                                        {% if user == course.instructor %}
+                                            <a href="{% url 'education:course_delete' course.pk %}" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i> Delete Course
+                                            </a>
+                                            <a href="{% url 'education:module_create' course.pk %}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle"></i> Add Module
+                                            </a>
+                                            <a href="{% url 'education:exam_create' course.pk %}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle"></i> Add Exam
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
                             <p>{{ course.description }}</p>
                             <div class="d-flex gap-2">
                                 <span class="badge bg-primary">{{ course.category }}</span>
@@ -59,7 +81,21 @@
                                 <div id="collapse{{ module.id }}" class="accordion-collapse collapse" 
                                      aria-labelledby="heading{{ module.id }}" data-bs-parent="#moduleAccordion{{ module.id }}">
                                     <div class="accordion-body">
-                                        <p>{{ module.description }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <p>{{ module.description }}</p>
+                                            
+                                            {% if user == course.instructor %}
+                                            <div>
+                                                <a href="{% url 'education:lesson_create' module.id %}" class="btn btn-sm btn-primary">
+                                                    <i class="bi bi-plus-circle"></i> Add Lesson
+                                                </a>
+                                                <a href="{% url 'education:module_delete' module.id %}" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-trash"></i> Delete Module
+                                                </a>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        
                                         <div class="list-group">
                                             {% for lesson in module.lessons.all %}
                                                 <a href="{% url 'education:lesson_detail' lesson.pk %}" 

@@ -44,5 +44,6 @@ urlpatterns = [
     
     # Questions and Choices
     path('exam/<int:exam_id>/question/create/', views.QuestionCreateView.as_view(), name='question_create'),
+    path('question/<int:pk>/delete/', views.QuestionDeleteView.as_view(), name='question_delete'),
     path('question/<int:question_id>/choice/create/', views.ChoiceCreateView.as_view(), name='choice_create'),
 ] 

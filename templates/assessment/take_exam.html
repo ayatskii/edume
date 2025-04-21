@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Exam: {{ exam.title }} - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3>{{ exam.title }}</h3>
+                        <div>
+                            <span class="badge bg-primary">Time Limit: {{ exam.duration }}</span>
+                            <span class="badge bg-info">Total Marks: {{ exam.total_marks }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <h5><i class="bi bi-info-circle-fill"></i> Exam Instructions</h5>
+                        <ul>
+                            <li>You have {{ exam.duration }} to complete this exam.</li>
+                            <li>Total marks for this exam is {{ exam.total_marks }}. You need {{ exam.passing_marks }} to pass.</li>
+                            <li>Make sure to submit your exam before the time expires.</li>
+                            <li>Once submitted, you cannot retake this exam.</li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% for question, form in questions_and_forms %}
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>
+                                        Question {{ question.order }} 
+                                        <span class="badge bg-secondary float-end">{{ question.marks }} mark{% if question.marks > 1 %}s{% endif %}</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="lead">{{ question.text }}</p>
+                                    
+                                    <div class="mt-3">
+                                        {% if question.question_type == 'mcq' %}
+                                            {{ form.selected_choices }}
+                                        {% elif question.question_type == 'checkbox' %}
+                                            {{ form.selected_choices }}
+                                        {% elif question.question_type == 'text' or question.question_type == 'essay' %}
+                                            <label for="{{ form.text_answer.id_for_label }}" class="form-label">Your Answer:</label>
+                                            {{ form.text_answer }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check2-circle"></i> Submit Exam
+                            </button>
+                            <a href="{% url 'assessment:exam_detail' exam.id %}" class="btn btn-outline-secondary">
+                                Cancel and Return to Exam Details
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

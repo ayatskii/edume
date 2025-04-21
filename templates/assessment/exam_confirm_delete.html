@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Exam - Education System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Delete Exam</h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Are you sure you want to delete the exam "{{ object.title }}"?</p>
+                    <p>This action cannot be undone and will also delete all associated questions, choices, and student submissions.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'assessment:exam_detail' object.id %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -70,18 +70,34 @@
 
                     {% if user.role == 'teacher' %}
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5>Exam Questions</h5>
+                                {% if exam.course.instructor == user %}
+                                <a href="{% url 'education:question_create' exam.pk %}" class="btn btn-sm btn-success">
+                                    <i class="bi bi-plus-circle"></i> Add Question
+                                </a>
+                                {% endif %}
                             </div>
                             <div class="card-body">
                                 <div class="list-group">
                                     {% for question in exam.questions.all %}
                                         <div class="list-group-item">
-                                            <h6>{{ question.text }}</h6>
-                                            <small class="text-muted">
-                                                Type: {{ question.get_question_type_display }} • 
-                                                Marks: {{ question.marks }}
-                                            </small>
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6>{{ question.text }}</h6>
+                                                    <small class="text-muted">
+                                                        Type: {{ question.get_question_type_display }} • 
+                                                        Marks: {{ question.marks }}
+                                                    </small>
+                                                </div>
+                                                {% if exam.course.instructor == user %}
+                                                <div>
+                                                    <a href="{% url 'education:question_delete' question.pk %}" class="btn btn-sm btn-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                                {% endif %}
+                                            </div>
                                             {% if question.question_type in 'mcq,checkbox' %}
                                                 <ul class="list-unstyled mt-2">
                                                     {% for choice in question.choices.all %}
@@ -95,6 +111,15 @@
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
+                                            {% endif %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-info">
+                                            <p>No questions added to this exam yet.</p>
+                                            {% if exam.course.instructor == user %}
+                                            <a href="{% url 'education:question_create' exam.pk %}" class="btn btn-success">
+                                                <i class="bi bi-plus-circle"></i> Add First Question
+                                            </a>
                                             {% endif %}
                                         </div>
                                     {% endfor %}
